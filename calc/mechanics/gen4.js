@@ -299,7 +299,7 @@ function calculateDPP(gen, attacker, defender, move, field) {
         desc.defenderAbility = defender.ability;
     }
     var attackStat = isPhysical ? 'atk' : 'spa';
-    desc.attackEVs = (0, util_1.getEVDescriptionText)(gen, attacker, attackStat, attacker.nature);
+    desc.attackEVs = (0, util_1.getStatDescriptionText)(gen, attacker, attackStat, attacker.nature);
     var attack;
     var attackBoost = attacker.boosts[attackStat];
     var rawAttack = attacker.rawStats[attackStat];
@@ -364,7 +364,7 @@ function calculateDPP(gen, attacker, defender, move, field) {
         desc.attackerItem = attacker.item;
     }
     var defenseStat = isPhysical ? 'def' : 'spd';
-    desc.defenseEVs = (0, util_1.getEVDescriptionText)(gen, defender, defenseStat, defender.nature);
+    desc.defenseEVs = (0, util_1.getStatDescriptionText)(gen, defender, defenseStat, defender.nature);
     var defense;
     var defenseBoost = defender.boosts[defenseStat];
     var rawDefense = defender.rawStats[defenseStat];

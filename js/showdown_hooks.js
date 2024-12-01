@@ -842,13 +842,13 @@ function get_next_in_g4() {
     var p2 = createPokemon(p2info);
     var p1field = createField();
     var p2field = p1field.clone().swap();
+    p1.name = $('.set-selector')[1].value.split(" (")[0]
 
 
 
 
     for (i in trainer_poks) {
         var pok_name = trainer_poks[i].split(" (")[0]
-        console.log(pok_name)
         var tr_name = trainer_poks[i].split(" (")[1].replace(")", "").split("[")[0]
         var type1 = pokedex[pok_name]["types"][0]
         var type2 = pokedex[pok_name]["types"][1] || type1
@@ -866,6 +866,7 @@ function get_next_in_g4() {
          // because the game only counts multihits moves as 1 
         
 
+       p2.name = pok_name
 
         var results = calculateAllMoves(damageGen, p1, p1field, p2, p2field, false)[1];
         

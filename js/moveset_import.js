@@ -853,7 +853,8 @@ $(document).ready(function () {
 	if (localStorage.customsets) {
 		customSets = JSON.parse(localStorage.customsets);
 
-		// updateDex(customSets);
+		updateDex(customSets);
+		get_box()
 		$(allPokemon("#importedSetsOptions")).css("display", "inline");
 	} else {
 		loadDefaultLists();

@@ -522,6 +522,27 @@ var SS = SM.concat([
     'Sweet Apple',
     'Tart Apple',
     'Throat Spray',
+    'Adamant Crystal', // SV items
+      'Auspicious Armor',
+      'Ability Shield',
+      'Booster Energy',
+      'Clear Amulet',
+      'Cornerstone Mask',
+      'Covert Cloak',
+      'Fairy Feather',
+      'Hearthflame Mask',
+      'Loaded Dice',
+      'Malicious Armor',
+      'Masterpiece Teacup',
+      'Metal Alloy',
+      'Mirror Herb',
+      'Punching Glove',
+      'Lustrous Globe',
+      'Griseous Core',
+      'Strange Ball',
+      'Syrupy Apple',
+      'Unremarkable Teacup',
+      'Wellspring Mask',
 ]);
 for (var i = 0; i < 100; i++) {
     SS.push("TR".concat(i < 10 ? "0".concat(i) : i));
