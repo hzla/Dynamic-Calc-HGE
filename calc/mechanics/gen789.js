@@ -422,6 +422,7 @@ function calculateSMSSSV(gen, attacker, defender, move, field) {
         (move.named('Shell Side Arm') && (0, util_2.getShellSideArmCategory)(attacker, defender) === 'Physical');
     var defenseStat = hitsPhysical ? 'def' : 'spd';
     var baseDamage = calculateBaseDamageSMSSSV(gen, attacker, defender, basePower, attack, defense, move, field, desc, isCritical);
+
     if (hasTerrainSeed(defender) &&
         field.hasTerrain(defender.item.substring(0, defender.item.indexOf(' '))) &&
         items_1.SEED_BOOSTED_STAT[defender.item] === defenseStat) {
@@ -1194,6 +1195,10 @@ exports.calculateDfModsSMSSSV = calculateDfModsSMSSSV;
 function calculateBaseDamageSMSSSV(gen, attacker, defender, basePower, attack, defense, move, field, desc, isCritical) {
     if (isCritical === void 0) { isCritical = false; }
     var baseDamage = (0, util_2.getBaseDamage)(attacker.level, basePower, attack, defense);
+    console.log("Old: " + baseDamage)
+    var baseDamage = Math.floor(Math.floor((Math.floor((2 * attacker.level) / 5 + 2) * basePower * attack) / 50) / defense);
+    console.log("New: " + baseDamage)
+
     var isSpread = field.gameType !== 'Singles' &&
         ['allAdjacent', 'allAdjacentFoes'].includes(move.target);
     if (isSpread) {

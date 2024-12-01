@@ -2078,6 +2078,7 @@ function loadDataSource(data) {
     load_js() 
 
 
+    console.log(localStorage.customsets)
     if (localStorage.customsets) {
         console.log("loading box")
         customSets = JSON.parse(localStorage.customsets);
@@ -2151,6 +2152,7 @@ $(document).ready(function() {
    "83c196dce6759252b3f4": "Black 2/White 2",
    "8d1ab90a3b3c494d8485": "Eternal X/Wilting Y Insanity Rebalanced",
    "68bfb2ccba14b7f6b1f0": "Inclement Emerald",
+    "0055b511e046845c72b6": "Aurora Crystal",
    "e9030beba9c1ba8804e8": "Kaizo Colloseum",
    "6875151cfa5eea00eafa": "Inclement Emerald No EVs",
    "d6364c8b89ad50905e6a": "Sterling Silver",

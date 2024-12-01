@@ -1,7 +1,8 @@
 params = new URLSearchParams(window.location.search);
-if (params.get('mechanics') == '9') {
+if (params.get('mechanics') == 'hgengine') {
     "use strict";
     exports.__esModule = true;
+    mechanics = "hgengine"
 
     var util_1 = require("../util");
     var items_1 = require("../items");
@@ -443,6 +444,7 @@ if (params.get('mechanics') == '9') {
             protect = true;
             desc.isProtected = true;
         }
+
         var finalMod = (0, util_2.chainMods)(finalMods, 41, 131072);
         var isSpread = field.gameType !== 'Singles' &&
             ['allAdjacent', 'allAdjacentFoes'].includes(move.target);
@@ -1196,6 +1198,7 @@ if (params.get('mechanics') == '9') {
     function calculateBaseDamageSMSS(gen, attacker, defender, basePower, attack, defense, move, field, desc, isCritical) {
         if (isCritical === void 0) { isCritical = false; }
         var baseDamage = (0, util_2.getBaseDamage)(attacker.level, basePower, attack, defense);
+        var baseDamage = Math.floor(Math.floor((Math.floor((2 * attacker.level) / 5 + 2) * basePower * attack) / 50) / defense);
         var isSpread = field.gameType !== 'Singles' &&
             ['allAdjacent', 'allAdjacentFoes'].includes(move.target);
         if (isSpread) {
@@ -1220,6 +1223,7 @@ if (params.get('mechanics') == '9') {
                 desc.weather = field.weather;
             }
         }
+        baseDamage += 2 // gen 4 behavior
         if (isCritical) {
             baseDamage = Math.floor((0, util_2.OF32)(baseDamage * 1.5));
             desc.isCritical = isCritical;

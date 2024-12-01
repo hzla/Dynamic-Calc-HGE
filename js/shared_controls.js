@@ -657,9 +657,9 @@ $(".set-selector").change(function () {
 			var pokesprite = pokemonName.toLowerCase().replace(" ", "-").replace(".","").replace("’","")
 			
 			$('#p1 .poke-sprite').attr('src', `./img/${playerSprites}/${pokesprite}.${suffix}`)
-			if (damageGen <= 5) {
+			// if (damageGen <= 5 || mechanics == 9 ) {
 				$('#p1 .poke-sprite').addClass('no-flip')
-			}
+			// }
 			if (TITLE == "Emerald Kaizo") {
 				caps = [15, 29, 48, 70]
 				current_tr_mon_level = parseInt($("#levelL1").val())
@@ -1744,16 +1744,17 @@ $(document).ready(function () {
 		playerSprites = "back"
 		suffix = "gif"
 	} else {
-		trainerSprites = "newhd"
-		playerSprites = "newhd"
-		$('.poke-sprite').css('background', 'none')
-		suffix = "png"
+		trainerSprites = "front"
+		playerSprites = "back"
+		// $('.poke-sprite').css('background', 'none')
+		suffix = "gif"
 	}
 	console.log(`Initializing Calc with moves from gen ${g} and mechanics from gen ${damageGen}`)
 	$("#gen" + g).prop("checked", true);
 	$("#gen" + g).change();
 	$("#percentage").prop("checked", true);
 	$("#percentage").change();
+	
 	loadDefaultLists();
 	$(".move-selector").select2({
 		dropdownAutoWidth: true,

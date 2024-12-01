@@ -837,6 +837,31 @@ $("#clearSets").click(function () {
 	}
 });
 
+function generateBox(level) {
+	available = []
+	for (const pok in npoint_data.poks) {
+		if (npoint_data.poks[pok].eal <= level && npoint_data.poks[pok].eal != 0) {
+			available.push(pok)
+		}
+	}
+	customSets = JSON.parse(localStorage.customsets || "{}");
+
+	for (let i = 0;i<available.length;i++) {
+		pok = available[i]
+		customSets[pok] = {
+			"My Box": {
+				"level": level,
+				"moves": [],
+				"nature": "Hardy",
+				"isCustomSet": true
+			}
+		}
+	}
+	updateDex(customSets)   
+    get_box()
+}
+
+
 $("#importedSets").click(function () {
 	var pokeID = "p1";
 	var showCustomSets = $(this).prop("checked");
@@ -850,13 +875,4 @@ $("#importedSets").click(function () {
 $(document).ready(function () {
 	// customSets;
 	placeBsBtn();
-	if (localStorage.customsets) {
-		customSets = JSON.parse(localStorage.customsets);
-
-		updateDex(customSets);
-		get_box()
-		$(allPokemon("#importedSetsOptions")).css("display", "inline");
-	} else {
-		loadDefaultLists();
-	}
 });

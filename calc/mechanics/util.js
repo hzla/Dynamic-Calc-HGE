@@ -180,6 +180,7 @@ function getMoveEffectiveness(gen, move, type, isGhostRevealed, isGravity, isRin
         return 2;
     }
     else {
+
         var effectiveness = gen.types.get((0, util_1.toID)(move.type)).effectiveness[type];
         if (effectiveness === 0 && isRingTarget) {
             effectiveness = 1;
@@ -542,12 +543,23 @@ function getFinalDamage(baseAmount, i, effectiveness, isBurned, stabMod, finalMo
     var damageAmount = Math.floor(OF32(baseAmount * (85 + i)) / 100);
     if (stabMod !== 4096)
         damageAmount = OF32(damageAmount * stabMod) / 4096;
-    damageAmount = Math.floor(OF32(pokeRound(damageAmount) * effectiveness));
+    if (mechanics == "hgengine") {
+        damageAmount = Math.floor(OF32(damageAmount) * effectiveness);
+    } else {
+       damageAmount = Math.floor(OF32(pokeRound(damageAmount) * effectiveness)); 
+    }
+    
     if (isBurned)
         damageAmount = Math.floor(damageAmount / 2);
     if (protect)
         damageAmount = pokeRound(OF32(damageAmount * 1024) / 4096);
-    return OF16(pokeRound(Math.max(1, OF32(damageAmount * finalMod) / 4096)));
+
+    if (mechanics == "hgengine") {
+        return OF16(Math.floor(Math.max(1, OF32(damageAmount * finalMod) / 4096)));
+    } else {
+        return OF16(pokeRound(Math.max(1, OF32(damageAmount * finalMod) / 4096)));
+    }
+    
 }
 exports.getFinalDamage = getFinalDamage;
 function getShellSideArmCategory(source, target) {
