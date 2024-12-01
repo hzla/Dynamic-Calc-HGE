@@ -337,6 +337,7 @@ if (params.get('mechanics') == 'hgengine') {
             (move.hasType('Ground') &&
                 !field.isGravity && !move.named('Thousand Arrows') &&
                 !defender.hasItem('Iron Ball') && defender.hasAbility('Levitate')) ||
+            (move.hasType('Bug') && defender.hasAbility('Bugcatcher')) ||
             (move.flags.bullet && defender.hasAbility('Bulletproof')) ||
             (move.flags.sound && !move.named('Clangorous Soul') && defender.hasAbility('Soundproof')) ||
             (move.priority > 0 && defender.hasAbility('Queenly Majesty', 'Dazzling', 'Armor Tail')) ||
@@ -810,7 +811,7 @@ if (params.get('mechanics') == 'hgengine') {
                 attacker.hasStatus('brn') && move.category === 'Special') ||
             (attacker.hasAbility('Toxic Boost') &&
                 attacker.hasStatus('psn', 'tox') && move.category === 'Physical') ||
-            (attacker.hasAbility('Mega Launcher') && move.flags.pulse) ||
+            ((attacker.hasAbility('Mega Launcher') && attacker.hasAbility('Aura Adept')) && move.flags.pulse) ||
             (attacker.hasAbility('Strong Jaw') && move.flags.bite) ||
             (attacker.hasAbility('Steely Spirit') && move.hasType('Steel')) ||
             (attacker.hasAbility('Sharpness') && move.flags.slicing)) {
@@ -2232,7 +2233,7 @@ if (params.get('mechanics') == 'hgengine') {
                     (attacker.hasAbility('Blaze') && move.hasType('Fire')) ||
                     (attacker.hasAbility('Torrent') && move.hasType('Water')) ||
                     (attacker.hasAbility('Swarm') && move.hasType('Bug')))) ||
-            (move.category === 'Special' && attacker.abilityOn && attacker.hasAbility('Plus', 'Minus'))) {
+            (move.category === 'Special' && attacker.abilityOn && attacker.hasAbility('Plus', 'Minus')) || (attacker.hasAbility('Aqua Adept') && move.hasType('Water'))) {
             atMods.push(6144);
             desc.attackerAbility = attacker.ability;
         }
