@@ -2077,8 +2077,6 @@ function loadDataSource(data) {
 
     load_js() 
 
-
-    console.log(localStorage.customsets)
     if (localStorage.customsets) {
         console.log("loading box")
         customSets = JSON.parse(localStorage.customsets);
@@ -2609,6 +2607,7 @@ $('.set-selector, .move-selector').on("select2-close", function () {
         var set = $(this).attr('data-id')
         localStorage["left"] = set 
         $('.player').val(set)
+        var species_name = set.split(" (")[0]
 
 
         console.log("switching")
@@ -2626,6 +2625,11 @@ $('.set-selector, .move-selector').on("select2-close", function () {
 
         var right_max_hp = $("#p1 .max-hp").text()
         $("#p1 .current-hp").val(right_max_hp).change()
+
+        if (typeof customSets[species_name]["My Box"]["area"] != undefined) {
+            $('.player .select2-chosen').text(`${species_name} (${customSets[species_name]["My Box"]["area"]} ${customSets[species_name]["My Box"]["rate"]}%)`)
+        }
+
     })
 
 

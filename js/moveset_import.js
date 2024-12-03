@@ -684,6 +684,15 @@ function isValidJSON(str) {
 }
 
 function addSets(pokes, name) {
+	if (pokes.includes("generate ")) {
+		var level = parseInt(pokes.split(" ")[1].trim())
+		if (pokes.includes("LEVEL")) {
+			alert("not literally LEVEL, but the level cap you want for your encounters for example 'generate 24'")
+			return
+		}
+		return generateEncs(level)
+	}
+
 	if (isValidJSON(pokes)) {
 		newSets = JSON.parse(pokes)
 		localStorage.customsets = newSets
@@ -860,6 +869,83 @@ function generateBox(level) {
 	updateDex(customSets)   
     get_box()
 }
+
+function generateEncs(level) {
+	available = []
+	
+
+	customSets = {}
+
+	// for every area choose one grass encounter, and lowest water encounter
+	for (const area in ac_encs) {
+		var enc_options
+		var grass_encs = ac_encs[area]["grass"]
+		var surf_encs = ac_encs[area]["surf"]
+		var rod_encs = ac_encs[area]["rod"] 
+
+
+
+
+		if (ac_encs[area]["grass_lvl"] <= level && grass_encs[0]["s"] != "None") {
+			rollEnc(grass_encs, level, `${area} - Grass`)
+		}		
+
+
+		// choose rod encounter if rod enc is low levelled enough, and is lower than surf level, and if exists
+		if (ac_encs[area]["rod_lvl"] <= level && ((ac_encs[area]["rod_lvl"] <= ac_encs[area]["surf_lvl"]) || ac_encs[area]["surf_lvl"] == 0) && rod_encs[0]["s"] != "None" ) {
+			rollEnc(rod_encs, level, `${area} - Rod`)
+		} else if (ac_encs[area]["surf_lvl"] <= level && surf_encs[0]["s"] != "None" ) {
+			rollEnc(surf_encs, level, `${area} - Surf`)
+		} 
+	}
+
+	updateDex(customSets)   
+    get_box()
+}
+
+function rollEnc(encs, level, area) {
+	var roll = Math.floor(Math.random() * 100)
+	var rateSum = 0
+
+	// filter out dupes
+	// encs = encs.filter(pok => (typeof customSets[pok["s"]] == undefined)) 
+
+	for (let i=0;i< encs.length;i++) {
+		rateSum += encs[i]["rate"]
+		if (rateSum >= roll) {
+			return createBoxSet(encs[i],level, area)
+		}
+	}
+	console.log("enc not found")
+	
+}
+
+function createBoxSet(species, level, area) {
+	var species_data = npoint_data.poks[species["s"]]
+	var ls = species_data["learnset_info"]["learnset"]
+
+	const movesAvailable = ls.filter(arr => arr[0] < level);
+
+    // Get the last 4 arrays
+    const moves = movesAvailable.slice(-4).map(arr => arr[1]);
+
+    var set = {
+		"level": level,
+		"moves": moves,
+		"nature": "Hardy",
+		"rate": species["rate"],
+		"isCustomSet": true,
+		"area": area
+	}
+	console.log(`Adding ${species['s']}`)
+    customSets[species["s"]] = {"My Box": set}
+	return set
+}
+
+
+
+
+
 
 
 $("#importedSets").click(function () {
