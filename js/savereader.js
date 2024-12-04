@@ -4,6 +4,9 @@ document.getElementById('save-upload').addEventListener('change', function(event
         const reader = new FileReader();
         savExt = $('#save-upload').val().slice(-3)
 
+        
+        baseGame = "HGSS"
+
         if (baseGame == "Pt") {
             partyCountOffset = 0x9C
             smallBlockSize = 0xCF2C
@@ -15,7 +18,7 @@ document.getElementById('save-upload').addEventListener('change', function(event
         } else if (baseGame == "HGSS") {
             partyCountOffset = 0x94
             smallBlockSize = 0xF628
-            boxDataOffset = 0x0f700
+            boxDataOffset = 0x010000
             bigBlockStart = boxDataOffset
             bigBlockSize = 0x12310
             footerSize = 16
@@ -80,6 +83,8 @@ document.getElementById('save-upload').addEventListener('change', function(event
             partyCount = n
 
 
+
+
             // Initialize an array to store decrypted chunks
             decryptedChunks = [];
             decryptedBattleStats = []
@@ -106,7 +111,7 @@ document.getElementById('save-upload').addEventListener('change', function(event
 
             offset = boxDataOffset
             CHUNK_SIZE = 136
-            n = 510
+            n = 900
             
 
             if (baseGame == "BW") {
@@ -120,7 +125,7 @@ document.getElementById('save-upload').addEventListener('change', function(event
 
             for (let i = 0; i < n; i++) {
                 // Extract the chunk of 236 bytes from the binary data
-
+                console.log(i)
                if (baseGame == "HGSS") {
                  if (i > 0 && i % 30 == 0) {
                     offset += 16
@@ -332,6 +337,10 @@ function parsePKM(chunk, is_party=false, offset=0) {
 
 
     var exp = (decryptedData[mon_data_offset + 5] << 16) | (decryptedData[mon_data_offset + 4]  & 0xFFFF)
+    console.log(showdownString)
+    console.log(exp)
+
+
     var exp_table = expTables[sav_pok_growths[decryptedData[mon_data_offset]]]
 
     var level = get_level(exp_table, exp) 

@@ -2153,17 +2153,18 @@ $(document).ready(function() {
     "0055b511e046845c72b6": "Aurora Crystal",
    "e9030beba9c1ba8804e8": "Kaizo Colloseum",
    "6875151cfa5eea00eafa": "Inclement Emerald No EVs",
-   "d6364c8b89ad50905e6a": "Sterling Silver",
-   "8f199f3f40194ecc4b8e": "Sterling Silver",
+   "8f199f3f40194ecc4b8e": "Sterling Silver 1.14",
+   "7ea3ff9a608c1963a0a5": "Sterling Silver 1.15",
    "5b789b0056c18c5c668b": "Platinum Redux 2.6",
    "de22f896c09fceb0b273": "Maximum Platinum",
    "a0ff5953fbf39bcdddd3": "Cascade White 2",
-   "ee9b421600cd6487e4e3": "Photonic Sun/Prismatic Moon"
+   "ee9b421600cd6487e4e3": "Photonic Sun/Prismatic Moon",
+   "0055b511e046845c72b6": "Aurora Crystal"
     }
 
     MASTERSHEETS = {
         "Blaze Black 2/Volt White 2 Redux 1.4": "bb2redux",
-        "Sterling Silver": "sterlingsilver",
+        "Sterling Silver 1.14": "sterlingsilver",
         "Renegade Platinum": "renplat"
     }
     encs = `https://api.npoint.io/c39f79b412a6f19f3c4f`
@@ -2172,14 +2173,15 @@ $(document).ready(function() {
     if (SOURCES[params.get('data')]) {
         TITLE = SOURCES[params.get('data')] || "NONE"
 
-        baseGame = ""
-        if (TITLE.includes("White") || TITLE.includes("Black") ) {
-            baseGame = "BW"
-        } else if (TITLE.includes("Platinum")) {
-            baseGame = "Pt"
-        } else if (TITLE.includes("Silver")) {
-            baseGame = "HGSS"
-        }
+        // baseGame = ""
+        // if (TITLE.includes("White") || TITLE.includes("Black") ) {
+        //     baseGame = "BW"
+        // } else if (TITLE.includes("Platinum")) {
+        //     baseGame = "Pt"
+        // } else if (TITLE.includes("Silver")) {
+        //     baseGame = "HGSS"
+        // }
+        baseGame = "HGSS"
 
         if (!baseGame) {
             $('#read-save').hide()
