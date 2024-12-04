@@ -629,6 +629,7 @@ function addToDex(poke) {
 	dexObject.nature = poke.nature;
 	dexObject.item = poke.item;
 	dexObject.isCustomSet = poke.isCustomSet;
+	dexObject.index = includes.poks.indexOf(poke.name)
 	var customsets;
 	if (localStorage.customsets) {
 		customsets = JSON.parse(localStorage.customsets);

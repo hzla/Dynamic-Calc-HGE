@@ -392,8 +392,10 @@ function get_box() {
         if (names[i].includes("My Box")) {
             box.push(names[i].split("[")[0])
 
+            var pok_id = customSets[names[i].split(" (")[0]]["My Box"].index
+
             var pok_name = names[i].split(" (")[0].toLowerCase().replace(" ","-").replace(".","").replace(".","").replace("’","").replace(":","-")
-            var pok = `<img class="trainer-pok left-side ${sprite_style}" src="./img/${sprite_style}/${pok_name}.png" data-id="${names[i].split("[")[0]}">`
+            var pok = `<img class="trainer-pok left-side ${sprite_style}" src="./img/${sprite_style}/${pok_name}.png" data-id="${names[i].split("[")[0]}" pok-id="${pok_id}">`
 
             box_html += pok
         }   
@@ -401,6 +403,20 @@ function get_box() {
 
 
     $('.player-poks').html(box_html)
+
+
+    const $container = $('.player-poks');
+    const $items = $container.children('.left-side');
+
+
+    $items.sort(function(a, b) {
+        return parseInt($(a).attr('pok-id')) - parseInt($(b).attr('pok-id'));
+    });
+
+    // Append sorted items back to the container
+    $container.append($items);
+
+
     return box
 }
 
