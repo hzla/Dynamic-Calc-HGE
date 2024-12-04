@@ -1362,7 +1362,7 @@ function get_current_learnset() {
     if (pok_name.includes("-Mega")) {
         pok_name = pok_name.split("-Mega")[0]
     } 
-    current_learnset = npoint_data['poks'][pok_name]["learnset_info"]
+    current_learnset = npoint_data['poks'][pok_name]["lsi"]
     
 
 
@@ -1373,9 +1373,9 @@ function get_current_learnset() {
 
     var ls_html = ""
 
-    for (let i = 0; i < current_learnset["learnset"].length; i++) {
-        var lvl = current_learnset["learnset"][i][0]
-        var mv_name = current_learnset["learnset"][i][1]
+    for (let i = 0; i < current_learnset["ls"].length; i++) {
+        var lvl = current_learnset["ls"][i][0]
+        var mv_name = current_learnset["ls"][i][1]
         ls_html += `<div class='ls-row'><div class='ls-level'>${lvl}</div><div class='ls-name'>${mv_name}</div></div>`
     }
     $(".lvl-up-moves").html(ls_html)
@@ -1910,7 +1910,7 @@ function loadDataSource(data) {
     
 
 
-    if (jsonPoks["Bulbasaur"]["learnset_info"]) {
+    if (jsonPoks["Bulbasaur"]["lsi"]) {
         $('#learnset-show').show()
     }
 
