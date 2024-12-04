@@ -2157,7 +2157,8 @@ $(document).ready(function() {
    "5b789b0056c18c5c668b": "Platinum Redux 2.6",
    "de22f896c09fceb0b273": "Maximum Platinum",
    "a0ff5953fbf39bcdddd3": "Cascade White 2",
-   "ee9b421600cd6487e4e3": "Photonic Sun/Prismatic Moon"
+   "ee9b421600cd6487e4e3": "Photonic Sun/Prismatic Moon",
+   "0055b511e046845c72b6": "Aurora Crystal"
     }
 
     MASTERSHEETS = {
@@ -2171,14 +2172,15 @@ $(document).ready(function() {
     if (SOURCES[params.get('data')]) {
         TITLE = SOURCES[params.get('data')] || "NONE"
 
-        baseGame = ""
-        if (TITLE.includes("White") || TITLE.includes("Black") ) {
-            baseGame = "BW"
-        } else if (TITLE.includes("Platinum")) {
-            baseGame = "Pt"
-        } else if (TITLE.includes("Silver")) {
-            baseGame = "HGSS"
-        }
+        // baseGame = ""
+        // if (TITLE.includes("White") || TITLE.includes("Black") ) {
+        //     baseGame = "BW"
+        // } else if (TITLE.includes("Platinum")) {
+        //     baseGame = "Pt"
+        // } else if (TITLE.includes("Silver")) {
+        //     baseGame = "HGSS"
+        // }
+        baseGame = "HGSS"
 
         if (!baseGame) {
             $('#read-save').hide()
