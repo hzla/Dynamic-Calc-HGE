@@ -17,8 +17,8 @@ document.getElementById('save-upload').addEventListener('change', function(event
             partyPokSize = 236
         } else if (baseGame == "HGSS") {
             partyCountOffset = 0x94
-            smallBlockSize = 0xF628
-            boxDataOffset = 0x010000
+            smallBlockSize = 0xFFA0 // old was FF28
+            boxDataOffset = 0x010000 // old was FF700
             bigBlockStart = boxDataOffset
             bigBlockSize = 0x12310
             footerSize = 16

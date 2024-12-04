@@ -8,6 +8,7 @@ function load_js() {
   boxSprites = ["newhd", "pokesprite"]
   themes = ["old", "new"]
   fainted = []
+  fakeEncs = false
   if (typeof localStorage.boxspriteindex === 'undefined') {
     localStorage.boxspriteindex = 1
   }
@@ -2628,7 +2629,7 @@ $('.set-selector, .move-selector').on("select2-close", function () {
         var right_max_hp = $("#p1 .max-hp").text()
         $("#p1 .current-hp").val(right_max_hp).change()
 
-        if (typeof customSets[species_name]["My Box"]["area"] != undefined) {
+        if (typeof customSets[species_name]["My Box"]["area"] != undefined && fakeEncs) {
             $('.player .select2-chosen').text(`${species_name} (${customSets[species_name]["My Box"]["area"]} ${customSets[species_name]["My Box"]["rate"]}%)`)
         }
 

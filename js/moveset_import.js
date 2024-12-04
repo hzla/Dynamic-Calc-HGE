@@ -872,7 +872,7 @@ function generateBox(level) {
 
 function generateEncs(level) {
 	available = []
-	
+	fakeEncs = true
 
 	customSets = {}
 
