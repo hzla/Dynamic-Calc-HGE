@@ -1827,6 +1827,7 @@ function get_type_info(pok_types, move=false) {
 }
 
 function loadDataSource(data) {
+    loadEnums()
     SETDEX_BW = data["formatted_sets"]
     SETDEX_ADV = data["formatted_sets"]
     SETDEX_DPP = data["formatted_sets"]

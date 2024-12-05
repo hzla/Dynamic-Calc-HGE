@@ -923,7 +923,7 @@ function rollEnc(encs, level, area) {
 
 function createBoxSet(species, level, area) {
 	var species_data = npoint_data.poks[species["s"]]
-	var ls = species_data["learnset_info"]["learnset"]
+	var ls = species_data["lsi"]["ls"]
 
 	const movesAvailable = ls.filter(arr => arr[0] < level);
 
