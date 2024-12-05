@@ -392,7 +392,12 @@ function get_box() {
         if (names[i].includes("My Box")) {
             box.push(names[i].split("[")[0])
 
-            var pok_id = customSets[names[i].split(" (")[0]]["My Box"].index
+            if (typeof customSets != "undefined") {
+                var pok_id = customSets[names[i].split(" (")[0]]["My Box"].index
+            } else {
+                var pok_id = 0
+            }
+            
 
             var pok_name = names[i].split(" (")[0].toLowerCase().replace(" ","-").replace(".","").replace(".","").replace("’","").replace(":","-")
             var pok = `<img class="trainer-pok left-side ${sprite_style}" src="./img/${sprite_style}/${pok_name}.png" data-id="${names[i].split("[")[0]}" pok-id="${pok_id}">`
