@@ -46,24 +46,102 @@ moveChanges = {
 
 
 	"Renegade Platinum": 
-		{"Barrage":     "Draining Kiss",
-		"Brine":        "Scald",
-		"Constrict":    "Icicle Crash",
-		"Horn Drill":   "Drill Run",
-		"Lunar Dance":  "Moonblast",
-		"Luster Purge": "Dazzling Gleam",
-		"Mist Ball":    "Disarming Voice",
-		"Sand Tomb":    "Bulldoze",
-		"Submission":   "Play Rough",
-		"Twister":      "Hurricane",
-		"Volt Tackle":  "Wild Charge"},
+		{
+			"Barrage":     "Draining Kiss",
+			"Brine":        "Scald",
+			"Constrict":    "Icicle Crash",
+			"Horn Drill":   "Drill Run",
+			"Lunar Dance":  "Moonblast",
+			"Luster Purge": "Dazzling Gleam",
+			"Mist Ball":    "Disarming Voice",
+			"Sand Tomb":    "Bulldoze",
+			"Submission":   "Play Rough",
+			"Twister":      "Hurricane",
+			"Volt Tackle":  "Wild Charge",
+			"HP Bug": "Hidden Power Bug",
+			"HP Dark": "Hidden Power Dark",
+			"HP Dragon": "Hidden Power Dragon",
+			"HP Electric": "Hidden Power Electric",
+			"HP Fighting": "Hidden Power Fighting",
+			"HP Fire": "Hidden Power Fire",
+			"HP Flying": "Hidden Power Flying",
+			"HP Ghost": "Hidden Power Ghost",
+			"HP Grass": "Hidden Power Grass",
+			"HP Ground": "Hidden Power Ground",
+			"HP Ice": "Hidden Power Ice",
+			"HP Normal": "Hidden Power Normal",
+			"HP Poison": "Hidden Power Poison",
+			"HP Psychic": "Hidden Power Psychic",
+			"HP Rock": "Hidden Power Rock",
+			"HP Steel": "Hidden Power Steel",
+			"HP Water": "Hidden Power Water",
+
+		},
 	
 	"Emerald Kaizo": 
 		{"Ancientpower":     "Ancient Power",
 		"X-scissor":        "X-Scissor",
 		"Faint Attack": "Feint Attack"},
 
-	"Sterling Silver": 
+	"Sterling Silver 1.14": 
+    {
+        "Defend Order": "HP Bug",
+        "Dark Void": "HP Dark",
+        "Twister": "HP Dragon",
+        "Thunder Shock": "HP Electric",
+        "Submission": "HP Fighting",
+        "Ember": "HP Fire",
+        "Feather Dance": "HP Flying",
+        "Astonish": "HP Ghost",
+        "Vine Whip": "HP Grass",
+        "Mud Sport": "HP Ground",
+        "Powder Snow": "HP Ice",
+        "Pound": "HP Normal",
+        "Sludge": "HP Poison",
+        "Psywave": "HP Psychic",
+        "Rock Throw": "HP Rock",
+        "Iron Defense": "HP Steel",
+        "Water Sport": "HP Water",
+        "Charge Beam": "Volt Switch",
+        "Gust": "Hurricane",
+        "Magnitude": "Bulldoze",
+        "Horn Drill": "Drill Run",
+        "Spider Web": "Electroweb",
+        "Slam": "Night Daze",
+        "Fury Swipes": "Dual Chop",
+        "Rollout": "Accelerock",
+        "Fissure": "Headlong Rush"
+    },
+    "Sterling Silver 1.15": 
+    {
+        "Defend Order": "HP Bug",
+        "Dark Void": "HP Dark",
+        "Twister": "HP Dragon",
+        "Thunder Shock": "HP Electric",
+        "Submission": "HP Fighting",
+        "Ember": "HP Fire",
+        "Feather Dance": "HP Flying",
+        "Astonish": "HP Ghost",
+        "Vine Whip": "HP Grass",
+        "Mud Sport": "HP Ground",
+        "Powder Snow": "HP Ice",
+        "Pound": "HP Normal",
+        "Sludge": "HP Poison",
+        "Psywave": "HP Psychic",
+        "Rock Throw": "HP Rock",
+        "Iron Defense": "HP Steel",
+        "Water Sport": "HP Water",
+        "Charge Beam": "Volt Switch",
+        "Gust": "Hurricane",
+        "Magnitude": "Bulldoze",
+        "Horn Drill": "Drill Run",
+        "Spider Web": "Electroweb",
+        "Slam": "Night Daze",
+        "Fury Swipes": "Dual Chop",
+        "Rollout": "Accelerock",
+        "Fissure": "Headlong Rush"
+    },
+    "Sterling Silver 1.16": 
     {
         "Defend Order": "HP Bug",
         "Dark Void": "HP Dark",
@@ -492,6 +570,7 @@ function getStats(currentPoke, rows, offset) {
 	var currentIV;
 	var currentAbility;
 	var currentNature;
+	var natureIsSet = false
 	currentPoke.level = 100;
 	for (var x = offset; x < offset + 8; x++) {
 		var currentRow = rows[x] ? rows[x].split(/[/:]/) : '';
@@ -525,15 +604,15 @@ function getStats(currentPoke, rows, offset) {
 		currentAbility = rows[x] ? rows[x].trim().split(":") : '';
 		if (currentAbility[0] == "Ability") {
 			currentPoke.ability = currentAbility[1].trim();
-			console.log(currentPoke.ability)
 			if (abilityChanges[TITLE] && abilityChanges[TITLE][currentPoke.ability]) {
 				currentPoke.ability = abilityChanges[TITLE][currentPoke.ability]
 			}
 		}
 
 		currentNature = rows[x] ? rows[x].trim().split(" ") : '';
-		if (currentNature[1] == "Nature") {
+		if (currentNature[1] == "Nature" && !natureIsSet) {
 			currentPoke.nature = currentNature[0];
+			natureIsSet = true
 		}
 	}
 	return currentPoke;
@@ -546,7 +625,6 @@ function isInt(value) {
 }
 
 function getItem(currentRow, j) {
-	console.log(currentRow)
 	for (;j < currentRow.length; j++) {
 		var item = currentRow[j].trim();
 		item = item.replace("’", "'");
@@ -575,6 +653,12 @@ function getMoves(currentPoke, rows, offset) {
 						console.log(`changed to ${move}`)
 					}
 				}
+
+				// ignore hacks with predefined hidden power
+				if (!TITLE.includes("Sterling") && !TITLE.includes("Maximum") && !TITLE.includes("Ancestral")) {
+					move = move.replace("HP ", "Hidden Power")
+				}
+
 				moves.push(move);
 			} else {
 				if (movesFound == true) {
@@ -613,8 +697,7 @@ function addToDex(poke) {
 	}
 
 
-	console.log(`${poke.name} - ${parseInt(poke.ability)}`)
-	console.log(pokedex[poke.name]['abilities'][parseInt(poke.ability)])
+
 
 	if (isInt(poke.ability)) {
 		console.log("ability updated")
@@ -636,7 +719,7 @@ function addToDex(poke) {
 	} else {
 		customsets = {};
 	}
-	// console.log(poke.nameProp)
+
 
 	if (!customsets[poke.name]) {
 		customsets[poke.name] = {};
@@ -721,7 +804,6 @@ function addSets(pokes, name) {
 				item = rows[i].split("@")[1].trim()
 			}
 			rows[i] = rows[i].split(" |Party")[0]
-			console.log(rows[i])
 			currentParty.push(rows[i])
 		}
 
@@ -752,9 +834,7 @@ function addSets(pokes, name) {
 					currentPoke.ability = getAbility(rows[i + 1].split(":"));
 				}
 
-				console.log(currentPoke.ability)
-				console.log("........")
-				
+
 				currentPoke = getStats(currentPoke, rows, i + 1);
 				currentPoke = getMoves(currentPoke, rows, i);
 				addToDex(currentPoke);

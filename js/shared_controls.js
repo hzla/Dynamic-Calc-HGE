@@ -419,7 +419,15 @@ $(".move-selector").change(function () {
 	if (m) {
 		var pokeObj = $(this).closest(".poke-info");
 		var pokemon = createPokemon(pokeObj);
-		var actual = calc.Stats.getHiddenPower(GENERATION, pokemon.ivs);
+
+		if ( TITLE.includes("Sterling") || TITLE.includes("Ancestral") || TITLE.includes("Maximum")) {
+			trueHP = false
+		} else {
+			trueHP = true
+		}
+
+		var actual = calc.Stats.getHiddenPower(GENERATION, pokemon.ivs, trueHP);
+		console.log(actual)
 		if (actual.type !== m[1]) {
 			var hpIVs = calc.Stats.getHiddenPowerIVs(GENERATION, m[1]);
 			if (hpIVs && gen < 7) {
@@ -503,6 +511,7 @@ function smogonAnalysis(pokemonName) {
 // auto-update set details on select
 
 function refresh_next_in() {
+	console.log("refreshing next in " + lastSetName)
 	var next_poks = get_next_in()
 
 	if (damageGen < 8) {
@@ -511,7 +520,9 @@ function refresh_next_in() {
 
 	var trpok_html = ""
 	for (i in next_poks ) {
-		if (next_poks[i][0].includes($('input.opposing').val())){
+		
+
+		if (next_poks[i][0].includes($('input.opposing').val()) && noSwitch != "1"){
 			continue
 		}
 		var pok_name = next_poks[i][0].split(" (")[0].toLowerCase().replace(" ","-").replace(".","").replace("’","").replace(":","-")
@@ -532,8 +543,8 @@ function refresh_next_in() {
 			isFainted = "fainted"
 		}
 
-		var pok = `<div class="trainer-pok-container">
-			<img class="trainer-pok right-side ${highlight} ${isFainted}" src="./img/${sprite_style}/${pok_name}.png" data-id="${dataID}">`
+		var pok = `<div class="trainer-pok-container no-switch-${noSwitch}">
+			<img class="trainer-pok right-side ${highlight} ${isFainted} " src="./img/${sprite_style}/${pok_name}.png" data-id="${dataID}">`
 
 
 		var species = next_poks[i][0].split(" (")[0]
@@ -556,11 +567,12 @@ function refresh_next_in() {
 		trpok_html += pok
 	}
 	$('.opposing.trainer-pok-list').html(trpok_html)
+
 }
 
 
-$('#p1 .boost, #statusL1, #p1 .percent-hp').change(function() {
-	refresh_next_in()
+$('#p1 .boost, #statusL1, #p1 .percent-hp').blur(function() {
+	refresh_next_in()	
 })
 
 
@@ -568,7 +580,6 @@ $(".set-selector").change(function () {
 	var fullSetName = $(this).val();
 	var pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
 	var setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
-
 
 	if ($(this).hasClass('opposing')) {
 		CURRENT_TRAINER_POKS = get_trainer_poks(fullSetName)
@@ -579,12 +590,9 @@ $(".set-selector").change(function () {
 		var right_max_hp = $("#p1 .max-hp").text()		
 		$("#p1 .current-hp").val(right_max_hp).change()
 	}
+	
 
-	refresh_next_in()
 
-	
-	
-	
 	if ($(this).hasClass('opposing')) {
 		if (SETDEX_BW && SETDEX_BW[pokemonName]) {
 			if (setName != "Blank Set") {
@@ -651,6 +659,9 @@ $(".set-selector").change(function () {
 		var pokesprite = pokemonName.toLowerCase().replace(" ", "-").replace(".","").replace("’","").replace(":","-")
 		$('#p2 .poke-sprite').attr('src', `./img/${trainerSprites}/${pokesprite.replace("-glitched", "")}.${suffix}`)
 
+		if ($('#player-poks-filter:visible').length > 0) {
+	       box_rolls() 
+	    } 
 
 	} else {
 		if (SETDEX_BW) {
@@ -824,6 +835,16 @@ $(".set-selector").change(function () {
 			pokeObj.find(".gender").val("");
 		} else pokeObj.find(".gender").parent().show();
 	}
+
+	// don't get new switch ins if set was the same
+	
+	if (fullSetName != lastSetName) {
+		refresh_next_in()
+	} else {
+		return
+	}
+	lastSetName = fullSetName
+	console.log("last set name set to: " + lastSetName)
 });
 
 function formatMovePool(moves) {
@@ -911,6 +932,7 @@ $(".forme").change(function () {
 });
 
 function correctHiddenPower(pokemon) {
+	return pokemon
 	// After Gen 7 bottlecaps means you can have a HP without perfect IVs
 	if (gen >= 7 && pokemon.level >= 100) return pokemon;
 
@@ -923,7 +945,7 @@ function correctHiddenPower(pokemon) {
 		if (iv !== 31) maxed = false;
 	}
 
-	var expected = calc.Stats.getHiddenPower(GENERATION, ivs);
+	var expected = calc.Stats.getHiddenPower(GENERATION, ivs, trueHP);
 	for (var i = 0; i < pokemon.moves.length; i++) {
 		var m = pokemon.moves[i].match(HIDDEN_POWER_REGEX);
 		if (!m) continue;

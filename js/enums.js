@@ -207,7 +207,3 @@ function get_level(table, exp) {
     // After the loop, 'left' is the index of the first element >= x, or arr.length if no such element exists
     return left < table.length ? left : -1;
 }
-
-
-
-

@@ -7,8 +7,12 @@ function load_js() {
   saveUploaded = false
   boxSprites = ["newhd", "pokesprite"]
   themes = ["old", "new"]
+  trueHP = true
   fainted = []
+
   fakeEncs = false
+  lastSetName = ""
+
   if (typeof localStorage.boxspriteindex === 'undefined') {
     localStorage.boxspriteindex = 1
   }
@@ -261,6 +265,9 @@ function setOpposing(id) {
     if ($('.info-group.opp > * > .forme').is(':visible')) {
         $('.info-group.opp > * > .forme').change()
     }
+    if ($('#player-poks-filter:visible').length > 0) {
+       box_rolls() 
+    } 
 }
 
 function get_trainer_names() {
@@ -337,11 +344,11 @@ function sort_box_by_dex(attr) {
 }
 
 function abv(s) {
-    if (($('.player-party').width() / s.length <= 70)) {
+    if (($('.player-party').width() / s.length <= 50)) {
         if (s.split(" ")[1]) {
-            return (s.split(" ")[0][0] + " " + s.split(" ")[1]).slice(0,11)
+            return (s.split(" ")[0][0] + " " + s.split(" ")[1]).slice(0,13)
         } else {
-            return s.slice(0,11)
+            return s.slice(0,13)
         }
         
     } else {
@@ -358,6 +365,8 @@ function get_custom_trainer_names() {
         for (i in pok_tr_names) {
            var trainer_name = pok_tr_names[i]
            var sub_index = poks[trainer_name]["sub_index"]
+
+
 
            // If there's a mastersheet
            if (npoint_data["order"]) {
@@ -470,19 +479,19 @@ function box_rolls() {
     var dealt_min_roll = $("#min-dealt").val()
     var taken_max_roll = $("#max-taken").val()
 
-    if ($("#min-dealt").val() == "" && $("#max-taken").val() == "") {
-        return
-    }
+    // if ($("#min-dealt").val() == "" && $("#max-taken").val() == "") {
+    //     return
+    // }
 
 
     if ($("#min-dealt").val() == "") {
-        $("#min-dealt").val(100)
-        dealt_min_roll=100
+        // $("#min-dealt").val(10000)
+        dealt_min_roll=10000
     } 
 
     if ($("#max-taken").val() == "") {
-        $("#max-taken").val(0)
-        taken_max_roll=0
+        // $("#max-taken").val(0)
+        taken_max_roll=-1
     }
 
     
@@ -498,6 +507,10 @@ function box_rolls() {
     var p1hp = $('#p2').find('#currentHpL1').val()
     var p1speed = parseInt($('.total.totalMod')[1].innerHTML)
 
+    if (p1.ability == "Intimidate") {
+        p1.ability = "Minus"
+    }
+
 
 
     var killers = []
@@ -506,9 +519,14 @@ function box_rolls() {
 
 
 
+
     for (m = 0; m < box.length; m++) {
         var mon = createPokemon(box[m])
         var monSpeed = mon.rawStats.spe
+
+        if (mon.ability == "Intimidate") {
+            mon.ability = "Minus"
+        }
 
         if (monSpeed > p1speed) {
             faster.push({"set": box[m]})
@@ -1501,6 +1519,9 @@ function toggle_box_rolls() {
 $('#toggle-boxroll').click(function(){
     toggle_box_rolls()
     $('#player-poks-filter').toggle()
+    if ($('#player-poks-filter:visible').length > 0) {
+        box_rolls()
+    }
 })
 
 $('#toggle-battle-notes').click(function(){
@@ -1673,7 +1694,13 @@ function get_next_in() {
         ranked_trainer_poks.push([trainer_poks[i], strongest_move_bp, strongest_move, sub_index, pok_data["moves"]])
     }
 
-    ranked_trainer_poks.sort(sort_trpoks)
+    if (typeof noSwitch != "undefined" && noSwitch == "1") {
+       ranked_trainer_poks.sort(sort_subindex)
+   } else {
+        ranked_trainer_poks.sort(sort_trpoks)
+   }
+
+    
     
     // Auto-sorts Megas to come out last - this should only run on switchIn=5
     var endSwap = null
@@ -1706,6 +1733,16 @@ function sort_trpoks(a, b) {
     }
     else {
         return (b[1] < a[1]) ? -1 : 1;
+    }
+}
+
+function sort_subindex(a, b) {
+    console.log([a,b])
+    if (a[3] === b[3]) {
+        return (parseInt(b[3]) < parseInt(a[3])) ? -1 : 1;
+    }
+    else {
+        return (parseInt(b[3]) > parseInt(a[3])) ? -1 : 1;
     }
 }
 
@@ -1842,6 +1879,11 @@ function loadDataSource(data) {
         $('#rom-title').text(TITLE).show()
     }
 
+
+    if (TITLE == 'Ancestral X') {
+        npoint_data["order"] = ax_order
+    }
+
     TR_NAMES = get_trainer_names()
     if ('move_replacements' in data) {
         CHANGES = data['move_replacements']
@@ -1938,6 +1980,7 @@ function loadDataSource(data) {
     }
 
     $('#save-pok').show()
+
 
 
 
@@ -2044,6 +2087,9 @@ function loadDataSource(data) {
         moves['Pay Day'].willCrit = true;
     }
 
+
+    const cleanString = (str) => str.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
     for (pok in pokedex) {
 
         if (pok.includes("Glitched")) {
@@ -2068,12 +2114,28 @@ function loadDataSource(data) {
         }
 
         pokedex[pok]["bs"] = jsonPok["bs"]
-        pokedex[pok]["types"] = jsonPok["types"]
+
+        if (jsonPok["types"]) {
+            pokedex[pok]["types"] = jsonPok["types"]
+        }
+        
         if (jsonPok.hasOwnProperty("abilities"))
             pokedex[pok]["abilities"] = jsonPok["abilities"]
+
+        const pok_id = cleanString(pok)
+        SPECIES_BY_ID[gen][pok_id].types = jsonPok["types"]
+
+        SPECIES_BY_ID[gen][pok_id].baseStats = {
+            "atk": jsonPok["bs"]["at"],
+            "def": jsonPok["bs"]["df"],
+            "hp": jsonPok["bs"]["hp"],
+            "spa": jsonPok["bs"]["sa"],
+            "spd": jsonPok["bs"]["sd"],
+            "spe": jsonPok["bs"]["sp"],
+        }
     }
 
-    if (damageGen >= 3 && damageGen < 6) {
+    if (damageGen > 3 && damageGen < 6) {
         pokedex['Cherrim-Sunshine']['bs'] = jsonPoks["Cherrim"]["bs"]
     }
     if (damageGen == 4) {
@@ -2127,11 +2189,13 @@ function loadDataSource(data) {
 
 
 params = new URLSearchParams(window.location.search);
+devMode = params.get('dev') == '1'
 g = params.get('gen');
 damageGen = parseInt(params.get('dmgGen'))
 type_chart = parseInt(params.get('types'))
 type_mod = params.get('type_mod')
 switchIn = parseInt(params.get('switchIn'))
+noSwitch = params.get('noSwitch')
 challengeMode = params.get('challengeMode')
 FAIRY = params.get('fairy')
 misc = params.get('misc')
@@ -2140,6 +2204,14 @@ DEFAULTS_LOADED = false
 analyze = false
 limitHits = false
 FIELD_EFFECTS = {}
+
+if (params.get('data') == 'bd7fc78f8fa2500dfcca') {
+    location.href = 'https://hzla.github.io/Dynamic-Calc/?data=26138cc1d500b0cf7334&gen=7&switchIn=4&types=6'
+}
+
+if (damageGen <= 3) {
+    $('#player-poks-filter').remove()
+}
 
 
 
@@ -2178,23 +2250,29 @@ $(document).ready(function() {
    "6875151cfa5eea00eafa": "Inclement Emerald No EVs",
    "8f199f3f40194ecc4b8e": "Sterling Silver 1.14",
    "7ea3ff9a608c1963a0a5": "Sterling Silver 1.15",
+   "b819708dba8f8c0641d5": "Sterling Silver 1.16",
    "5b789b0056c18c5c668b": "Platinum Redux 2.6",
    "de22f896c09fceb0b273": "Maximum Platinum",
    "a0ff5953fbf39bcdddd3": "Cascade White 2",
    "ee9b421600cd6487e4e3": "Photonic Sun/Prismatic Moon",
-   "0055b511e046845c72b6": "Aurora Crystal"
+   "0055b511e046845c72b6": "Aurora Crystal",
+   "d3501821feaa976d581a": "Azure Platinum",
+   "9abb79df1e356642c229": "Fire Red Omega",
+   "12f82557ed0e08145660": "Fire Red"
     }
 
     MASTERSHEETS = {
         "Blaze Black 2/Volt White 2 Redux 1.4": "bb2redux",
         "Sterling Silver 1.14": "sterlingsilver",
-        "Renegade Platinum": "renplat"
+        "Renegade Platinum": "renplat",
+        "Vintage White": "vw"
     }
     encs = `https://api.npoint.io/c39f79b412a6f19f3c4f`
 
     INC_EM = false
     if (SOURCES[params.get('data')]) {
         TITLE = SOURCES[params.get('data')] || "NONE"
+
 
         // baseGame = ""
         // if (TITLE.includes("White") || TITLE.includes("Black") ) {
@@ -2206,8 +2284,11 @@ $(document).ready(function() {
         // }
         baseGame = "HGSS"
 
+
         if (!baseGame) {
             $('#read-save').hide()
+        } else {
+            $('.save-editor-guide').show()
         }
 
         $('.genSelection').hide()
@@ -2648,6 +2729,8 @@ $('.set-selector, .move-selector').on("select2-close", function () {
         get_box()
         box_rolls()
 
+        currentLvl = parseInt($('#levelL1').val())
+
         var right_max_hp = $("#p1 .max-hp").text()
         $("#p1 .current-hp").val(right_max_hp).change()
 
@@ -2655,6 +2738,21 @@ $('.set-selector, .move-selector').on("select2-close", function () {
             $('.player .select2-chosen').text(`${species_name} (${customSets[species_name]["My Box"]["area"]} ${customSets[species_name]["My Box"]["rate"]}%)`)
         }
 
+    })
+
+    $(document).on('blur', '#max-taken, #min-dealt', function() {
+        if ($(this).val() != "") {
+           box_rolls() 
+        } 
+    })
+
+    $(document).on('click', '#clear-filters', function(){
+        $('#max-taken').val("")
+        $('#min-dealt').val("")
+        var poks = $('#p1').find(".trainer-pok")
+
+        poks.removeClass('defender')
+        poks.removeClass('killer')
     })
 
 
