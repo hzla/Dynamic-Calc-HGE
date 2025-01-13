@@ -7,6 +7,34 @@ function loadEnums() {
 	sav_pok_growths = includes["growths"]
 	sav_abilities = includes["abilities"]
 
+	natMods = {
+	  Hardy: { plus: 'atk', minus: 'atk' },
+	  Lonely: { plus: 'atk', minus: 'def' },
+	  Brave: { plus: 'atk', minus: 'spe' },
+	  Adamant: { plus: 'atk', minus: 'spa' },
+	  Naughty: { plus: 'atk', minus: 'spd' },
+	  Bold: { plus: 'def', minus: 'atk' },
+	  Docile: { plus: 'atk', minus: 'atk' },
+	  Relaxed: { plus: 'def', minus: 'spe' },
+	  Impish: { plus: 'def', minus: 'spa' },
+	  Lax: { plus: 'def', minus: 'spd' },
+	  Timid: { plus: 'spe', minus: 'atk' },
+	  Hasty: { plus: 'spe', minus: 'def' },
+	  Serious: { plus: 'atk', minus: 'atk' },
+	  Jolly: { plus: 'spe', minus: 'spa' },
+	  Naive: { plus: 'spe', minus: 'spd' },
+	  Modest: { plus: 'spa', minus: 'atk' },
+	  Mild: { plus: 'spa', minus: 'def' },
+	  Quiet: { plus: 'spa', minus: 'spe' },
+	  Bashful: { plus: 'atk', minus: 'atk' },
+	  Rash: { plus: 'spa', minus: 'spd' },
+	  Calm: { plus: 'spd', minus: 'atk' },
+	  Gentle: { plus: 'spd', minus: 'def' },
+	  Sassy: { plus: 'spd', minus: 'spe' },
+	  Careful: { plus: 'spd', minus: 'spa' },
+	  Quirky: { plus: 'atk', minus: 'atk' }
+	};
+
 	natures = ["Hardy",
 	        "Lonely",
 	        "Brave",
