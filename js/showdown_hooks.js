@@ -2193,6 +2193,7 @@ devMode = params.get('dev') == '1'
 g = params.get('gen');
 damageGen = parseInt(params.get('dmgGen'))
 type_chart = parseInt(params.get('types'))
+save_expansion = params.get('savExp') == '1'
 type_mod = params.get('type_mod')
 switchIn = parseInt(params.get('switchIn'))
 noSwitch = params.get('noSwitch')

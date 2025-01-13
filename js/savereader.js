@@ -24,7 +24,12 @@ document.getElementById('save-upload').addEventListener('change', function(event
         } else if (baseGame == "HGSS") {
             partyCountOffset = 0x94
             smallBlockSize = 0xFFA0 // old was FF28
-            boxDataOffset = 0x010000 // old was FF700
+            
+            if (save_expansion) {
+               boxDataOffset = 0x010000 // old was F700 
+           } else {
+                boxDataOffset = 0xF700
+           }
             bigBlockStart = boxDataOffset
             bigBlockSize = 0x12310
             footerSize = 16
@@ -115,8 +120,13 @@ document.getElementById('save-upload').addEventListener('change', function(event
 
             offset = boxDataOffset
             CHUNK_SIZE = 136
-            n = 900
             
+
+             if (save_expansion) {
+               n = 900 // old was F700 
+           } else {
+               n = 540
+           }
 
             if (baseGame == "BW") {
                 n = 690
@@ -322,7 +332,6 @@ function parsePKM(chunk, is_party=false, offset=0) {
     console.log(showdownString)
 
     var exp = (decryptedData[mon_data_offset + 5] << 16) | (decryptedData[mon_data_offset + 4]  & 0xFFFF)
-    console.log(showdownString)
     console.log(exp)
 
 
@@ -344,6 +353,7 @@ function parsePKM(chunk, is_party=false, offset=0) {
         showdownString += `- ${move_name}\n`
     }
     showdownString += "\n"
+
     return showdownString    
 }
 
